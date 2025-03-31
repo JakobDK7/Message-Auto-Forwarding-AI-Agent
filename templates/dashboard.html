@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Message Auto-Forwarding System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5 mb-4">
+            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+        </h1>
+    </div>
+</div>
+
+<!-- Stats Row -->
+<div class="row mb-4">
+    <!-- Platform Count -->
+    <div class="col-md-4">
+        <div class="card card-dashboard stats-card">
+            <div class="stats-icon text-primary">
+                <i class="fas fa-server"></i>
+            </div>
+            <div class="stats-number">{{ platform_count }}</div>
+            <div class="stats-text">Connected Platforms</div>
+        </div>
+    </div>
+    
+    <!-- Active Rules -->
+    <div class="col-md-4">
+        <div class="card card-dashboard stats-card">
+            <div class="stats-icon text-success">
+                <i class="fas fa-code-branch"></i>
+            </div>
+            <div class="stats-number">{{ active_rules }}</div>
+            <div class="stats-text">Active Rules</div>
+        </div>
+    </div>
+    
+    <!-- Message Logs -->
+    <div class="col-md-4">
+        <div class="card card-dashboard stats-card">
+            <div class="stats-icon text-info">
+                <i class="fas fa-list-alt"></i>
+            </div>
+            <div class="stats-number">{{ logs|length }}</div>
+            <div class="stats-text">Recent Activities</div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Dashboard Content -->
+<div class="row">
+    <!-- Platform Overview -->
+    <div class="col-md-6 mb-4">
+        <div class="card card-dashboard h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-server me-2"></i>
+                    Connected Platforms
+                </h5>
+                <a href="{{ url_for('platforms') }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus me-1"></i> Add Platform
+                </a>
+            </div>
+            <div class="card-body">
+                {% if platforms %}
+                    <div class="list-group">
+                        {% for platform in platforms %}
+                            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    {% if platform.type == 'telegram' %}
+                                        <span class="platform-type-icon bg-info">
+                                            <i class="fab fa-telegram-plane"></i>
+                                        </span>
+                                    {% elif platform.type == 'whatsapp' %}
+                                        <span class="platform-type-icon bg-success">
+                                            <i class="fab fa-whatsapp"></i>
+                                        </span>
+                                    {% elif platform.type == 'slack' %}
+                                        <span class="platform-type-icon bg-warning">
+                                            <i class="fab fa-slack"></i>
+                                        </span>
+                                    {% elif platform.type == 'discord' %}
+                                        <span class="platform-type-icon bg-primary">
+                                            <i class="fab fa-discord"></i>
+                                        </span>
+                                    {% else %}
+                                        <span class="platform-type-icon bg-secondary">
+                                            <i class="fas fa-comment"></i>
+                                        </span>
+                                    {% endif %}
+                                    {{ platform.name }}
+                                </div>
+                                <span class="badge bg-secondary">{{ platform.type }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No platforms configured yet. Add your first platform to get started.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rules Overview -->
+    <div class="col-md-6 mb-4">
+        <div class="card card-dashboard h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-code-branch me-2"></i>
+                    Forwarding Rules
+                </h5>
+                <a href="{{ url_for('rules') }}" class="btn btn-sm btn-primary">
+                    <i class="fas fa-plus me-1"></i> Add Rule
+                </a>
+            </div>
+            <div class="card-body">
+                {% if rules %}
+                    <div class="list-group">
+                        {% for rule in rules %}
+                            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="rule-status {{ 'active' if rule.is_active else 'inactive' }}"></span>
+                                    {{ rule.name }}
+                                </div>
+                                <form action="{{ url_for('execute_rule', rule_id=rule.id) }}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-primary" title="Execute Now">
+                                        <i class="fas fa-play"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No forwarding rules configured yet. Create your first rule to start forwarding messages.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity -->
+<div class="row">
+    <div class="col-12">
+        <div class="card card-dashboard">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-history me-2"></i>
+                    Recent Activity
+                </h5>
+                <a href="{{ url_for('logs') }}" class="btn btn-sm btn-secondary">
+                    View All Logs
+                </a>
+            </div>
+            <div class="card-body">
+                {% if logs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Rule</th>
+                                    <th>Status</th>
+                                    <th>Message</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                    <tr>
+                                        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                        <td>{{ log.rule.name }}</td>
+                                        <td>
+                                            {% if log.status == 'success' %}
+                                                <span class="badge bg-success">Success</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Error</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.status == 'success' %}
+                                                Message forwarded successfully
+                                            {% else %}
+                                                {{ log.error_message }}
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No recent activity to display.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

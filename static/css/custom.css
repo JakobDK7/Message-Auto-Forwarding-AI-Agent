@@ -1,0 +1,163 @@
+/* Custom CSS for Message Auto-Forwarding System */
+
+/* General Styles */
+body {
+    padding-top: 56px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Page content container */
+.content-container {
+    flex: 1;
+    padding: 20px 0;
+}
+
+/* Cards */
+.card-dashboard {
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-dashboard:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+}
+
+/* Stats Cards */
+.stats-card {
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stats-card .stats-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.stats-card .stats-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.stats-card .stats-text {
+    font-size: 1rem;
+    color: var(--bs-secondary);
+}
+
+/* Logs */
+.log-entry {
+    padding: 0.75rem;
+    border-left: 4px solid var(--bs-secondary);
+    margin-bottom: 0.5rem;
+}
+
+.log-entry.success {
+    border-left-color: var(--bs-success);
+}
+
+.log-entry.error {
+    border-left-color: var(--bs-danger);
+}
+
+/* Code Blocks */
+.code-block {
+    font-family: monospace;
+    padding: 1rem;
+    background-color: var(--bs-dark);
+    border-radius: 0.25rem;
+    color: var(--bs-light);
+    overflow-x: auto;
+    white-space: pre;
+    font-size: 0.875rem;
+}
+
+/* Platform Cards */
+.platform-card {
+    margin-bottom: 1.5rem;
+}
+
+.platform-card .platform-icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.platform-type-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+/* Rule Cards */
+.rule-card {
+    margin-bottom: 1.5rem;
+}
+
+.rule-status {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.5rem;
+}
+
+.rule-status.active {
+    background-color: var(--bs-success);
+}
+
+.rule-status.inactive {
+    background-color: var(--bs-secondary);
+}
+
+/* Form Improvements */
+.form-floating > label {
+    padding-left: 1rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* Login/Register Forms */
+.auth-form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.auth-logo {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+/* Helper Styles */
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.credentials-field {
+    font-family: monospace;
+}
+
+/* Footer */
+.footer {
+    margin-top: auto;
+    padding: 1rem 0;
+    background-color: var(--bs-dark);
+}

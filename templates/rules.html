@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+
+{% block title %}Rules - Message Auto-Forwarding System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5 mb-4">
+            <i class="fas fa-code-branch me-2"></i> Forwarding Rules
+        </h1>
+        <p class="lead">
+            Configure rules to automatically forward messages between your connected platforms.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Rules List -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Active Rules</h5>
+            </div>
+            <div class="card-body">
+                {% if rules %}
+                    <div class="row">
+                        {% for rule in rules %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card rule-card h-100">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h5 class="card-title mb-1">
+                                                    <span class="rule-status {{ 'active' if rule.is_active else 'inactive' }}"></span>
+                                                    {{ rule.name }}
+                                                </h5>
+                                                <p class="card-text text-muted mb-2">
+                                                    <small>
+                                                        Created: {{ rule.created_at.strftime('%Y-%m-%d') }}
+                                                    </small>
+                                                </p>
+                                            </div>
+                                            <div class="action-buttons">
+                                                <form action="{{ url_for('execute_rule', rule_id=rule.id) }}" method="post">
+                                                    <button type="submit" class="btn btn-sm btn-outline-primary" title="Execute Now">
+                                                        <i class="fas fa-play"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="{{ url_for('toggle_rule', rule_id=rule.id) }}" method="post">
+                                                    <button type="submit" class="btn btn-sm btn-outline-{{ 'warning' if rule.is_active else 'success' }}" title="{{ 'Deactivate' if rule.is_active else 'Activate' }}">
+                                                        <i class="fas {{ 'fa-pause' if rule.is_active else 'fa-play' }}"></i>
+                                                    </button>
+                                                </form>
+                                                <form action="{{ url_for('delete_rule', rule_id=rule.id) }}" method="post" class="confirm-deletion">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Rule">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                        
+                                        <p class="card-text">
+                                            <span class="badge bg-secondary me-1">From</span>
+                                            {{ rule.source.name }}
+                                        </p>
+                                        <p class="card-text">
+                                            <span class="badge bg-secondary me-1">To</span>
+                                            {{ rule.destination.name }}
+                                        </p>
+                                        
+                                        {% if rule.schedule %}
+                                            <p class="card-text">
+                                                <span class="badge bg-info me-1">Schedule</span>
+                                                {{ rule.schedule }}
+                                            </p>
+                                        {% endif %}
+                                        
+                                        {% if rule.filters %}
+                                            <p class="card-text">
+                                                <span class="badge bg-info me-1">Filters</span>
+                                                <small class="text-muted">{{ rule.filters }}</small>
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No forwarding rules configured yet. Create your first rule to start forwarding messages.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Rule Form -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Create New Rule</h5>
+            </div>
+            <div class="card-body">
+                {% if platforms|length < 2 %}
+                    <div class="alert alert-warning mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        You need at least two platforms to create a forwarding rule.
+                        <a href="{{ url_for('platforms') }}" class="alert-link">Add platforms</a>
+                    </div>
+                {% else %}
+                    <form method="post" action="{{ url_for('rules') }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Rule Name</label>
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Daily Telegram to WhatsApp" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="source_id" class="form-label">Source Platform</label>
+                            <select class="form-select" id="source_id" name="source_id" required>
+                                <option value="" selected disabled>Select source platform</option>
+                                {% for platform in platforms %}
+                                    <option value="{{ platform.id }}">{{ platform.name }} ({{ platform.type }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="destination_id" class="form-label">Destination Platform</label>
+                            <select class="form-select" id="destination_id" name="destination_id" required>
+                                <option value="" selected disabled>Select destination platform</option>
+                                {% for platform in platforms %}
+                                    <option value="{{ platform.id }}">{{ platform.name }} ({{ platform.type }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div id="rule-config-section" class="d-none">
+                            <hr>
+                            <h6 class="mb-3">Rule Configuration</h6>
+                            
+                            <div class="mb-3">
+                                <label for="schedule" class="form-label">Schedule (Optional)</label>
+                                <input type="text" class="form-control" id="schedule" name="schedule" placeholder="5 (every 5 minutes)">
+                                <div class="form-text">
+                                    Simple formats: "5" (every 5 minutes), "14 30" (daily at 14:30)
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="filters" class="form-label">Message Filters (Optional)</label>
+                                <textarea class="form-control credentials-field" id="filters" name="filters" rows="4" placeholder='{"keywords": ["important", "urgent"]}'></textarea>
+                                <div class="form-text">
+                                    JSON format. Example: {"keywords": ["important", "urgent"], "chat": "Team Chat"}
+                                </div>
+                                <div id="filters-validation" class="small mt-1"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-plus me-1"></i> Create Rule
+                            </button>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Rule Help</h5>
+            </div>
+            <div class="card-body">
+                <h6>Schedule Formats:</h6>
+                <ul class="small mb-3">
+                    <li><strong>5</strong> - Run every 5 minutes</li>
+                    <li><strong>14 30</strong> - Run daily at 14:30</li>
+                    <li>Leave empty for default (every 15 minutes)</li>
+                </ul>
+                
+                <h6>Filter Examples:</h6>
+                <div class="code-block mb-0">
+{
+  "keywords": ["urgent", "important"],
+  "chat": "Work Group"
+}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

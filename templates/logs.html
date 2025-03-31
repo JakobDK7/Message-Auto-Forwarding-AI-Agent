@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Logs - Message Auto-Forwarding System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1 class="display-5 mb-0">
+            <i class="fas fa-list-alt me-2"></i> Activity Logs
+        </h1>
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="auto-refresh">
+            <label class="form-check-label" for="auto-refresh">Auto-refresh</label>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Message Forwarding Logs</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="window.location.reload()">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% if logs %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Rule</th>
+                                    <th>Status</th>
+                                    <th>Source Message</th>
+                                    <th>Details</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in logs %}
+                                    <tr>
+                                        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                        <td>
+                                            {{ log.rule.name }}
+                                            <div class="small text-muted">
+                                                {{ log.rule.source.name }} → {{ log.rule.destination.name }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if log.status == 'success' %}
+                                                <span class="badge bg-success">Success</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Error</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.source_message %}
+                                                <button class="btn btn-sm btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#sourceMsg{{ log.id }}" aria-expanded="false">
+                                                    View message
+                                                </button>
+                                                <div class="collapse" id="sourceMsg{{ log.id }}">
+                                                    <div class="card card-body mt-2">
+                                                        <small>{{ log.source_message }}</small>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <span class="text-muted">No message</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if log.status == 'success' %}
+                                                Message forwarded successfully
+                                            {% else %}
+                                                <button class="btn btn-sm btn-link text-danger" type="button" data-bs-toggle="collapse" data-bs-target="#errorMsg{{ log.id }}" aria-expanded="false">
+                                                    View error
+                                                </button>
+                                                <div class="collapse" id="errorMsg{{ log.id }}">
+                                                    <div class="card card-body mt-2 bg-danger-subtle">
+                                                        <small>{{ log.error_message }}</small>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No log entries yet. They will appear here once your forwarding rules start executing.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block title %}Platforms - Message Auto-Forwarding System{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h1 class="display-5 mb-4">
+            <i class="fas fa-server me-2"></i> Platforms
+        </h1>
+        <p class="lead">
+            Configure the platforms you want to connect for message forwarding.
+        </p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Platform List -->
+    <div class="col-lg-8 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Connected Platforms</h5>
+            </div>
+            <div class="card-body">
+                {% if platforms %}
+                    <div class="row">
+                        {% for platform in platforms %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card platform-card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start">
+                                            <div>
+                                                <h5 class="card-title mb-1">{{ platform.name }}</h5>
+                                                <p class="card-text text-muted mb-3">
+                                                    {% if platform.type == 'telegram' %}
+                                                        <i class="fab fa-telegram-plane me-1"></i> Telegram
+                                                    {% elif platform.type == 'whatsapp' %}
+                                                        <i class="fab fa-whatsapp me-1"></i> WhatsApp
+                                                    {% elif platform.type == 'slack' %}
+                                                        <i class="fab fa-slack me-1"></i> Slack
+                                                    {% elif platform.type == 'discord' %}
+                                                        <i class="fab fa-discord me-1"></i> Discord
+                                                    {% else %}
+                                                        <i class="fas fa-comment me-1"></i> {{ platform.type }}
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                            <form action="{{ url_for('delete_platform', platform_id=platform.id) }}" method="post" class="confirm-deletion">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete Platform">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                        
+                                        <p class="mb-0 small text-muted">
+                                            <i class="fas fa-clock me-1"></i> Added on {{ platform.created_at.strftime('%Y-%m-%d') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No platforms configured yet. Add your first platform to get started.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Platform Form -->
+    <div class="col-lg-4 mb-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Add New Platform</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" action="{{ url_for('platforms') }}">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Platform Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="My Telegram Account" required>
+                        <div class="form-text">Give your platform a descriptive name</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="platform-type" class="form-label">Platform Type</label>
+                        <select class="form-select" id="platform-type" name="type" required>
+                            <option value="" selected disabled>Select a platform</option>
+                            <option value="telegram">Telegram</option>
+                            <option value="whatsapp">WhatsApp</option>
+                            <option value="slack">Slack</option>
+                            <option value="discord">Discord</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="credentials" class="form-label">Credentials</label>
+                        <textarea class="form-control credentials-field" id="credentials" name="credentials" rows="5" placeholder='{"key": "value"}' required></textarea>
+                        <div class="form-text" id="credentials-helper">
+                            Enter credentials in JSON format
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="card bg-dark">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="small">Example Format</span>
+                                <button type="button" id="copy-credentials" class="btn btn-sm btn-outline-light">
+                                    <i class="fas fa-copy"></i> Copy
+                                </button>
+                            </div>
+                            <div class="card-body p-2">
+                                <pre class="mb-0"><code id="credentials-example">{}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i> Add Platform
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">Platform Info</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info mb-3">
+                    <h6 class="alert-heading"><i class="fas fa-info-circle me-1"></i> First-Time Login</h6>
+                    <p class="mb-0 small">
+                        When adding platforms like Telegram or WhatsApp, you may need to manually log in the first time by scanning a QR code or entering a verification code.
+                    </p>
+                </div>
+                
+                <div class="alert alert-warning mb-0">
+                    <h6 class="alert-heading"><i class="fas fa-exclamation-triangle me-1"></i> Security Note</h6>
+                    <p class="mb-0 small">
+                        Your credentials are stored locally and used only for authentication to the respective platforms. Never share your credentials with anyone.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
